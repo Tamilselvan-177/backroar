@@ -154,6 +154,7 @@
 
 intro base.html
 
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -239,6 +240,26 @@ intro base.html
 </head>
 
 <body class="bg-[var(--brand-bg)]">
+<!-- INTRO VIDEO (ONLY FIRST VISIT) -->
+<div id="intro-container" 
+     class="fixed inset-0 bg-black flex items-center justify-center z-[9999] hidden">
+
+    <!-- Desktop Intro -->
+    <video id="intro-desktop" 
+           autoplay muted playsinline preload="auto"
+           class="hidden md:block w-full h-full object-cover">
+        <source src="{{ app_url }}/assets/intro.mp4" type="video/mp4">
+    </video>
+
+    <!-- Mobile Intro -->
+    <video id="intro-mobile" 
+           autoplay muted playsinline preload="auto"
+           class="block md:hidden w-full h-full object-cover">
+        <source src="{{ app_url }}/assets/mobileintro.mp4" type="video/mp4">
+    </video>
+
+</div>
+
     <!-- Navbar -->
     <nav class="sticky top-0 w-full z-50 bg-white shadow-sm">
         <div class="container mx-auto px-4 py-3 flex items-center justify-between">
@@ -402,6 +423,36 @@ fetch('{{ app_url }}/cart/count')
     </footer>
 
     <script>
+    document.addEventListener("DOMContentLoaded", () => {
+
+    // Prevent second load
+    if (sessionStorage.getItem("introPlayed")) return;
+
+    const introContainer = document.getElementById("intro-container");
+    const introDesktop = document.getElementById("intro-desktop");
+    const introMobile = document.getElementById("intro-mobile");
+
+    // Show container
+    introContainer.classList.remove("hidden");
+
+    // Detect device
+    const isMobile = window.innerWidth < 768;
+
+    const video = isMobile ? introMobile : introDesktop;
+
+    // Ensure browser starts it
+    video.addEventListener("loadeddata", () => {
+        video.play();
+    });
+
+    // After video ends hide
+    video.onended = () => {
+        introContainer.classList.add("hidden");
+    };
+
+    // Save session flag so it won’t load again
+    sessionStorage.setItem("introPlayed", "1");
+});
         // Mobile Menu Toggle
         const menuToggle = document.getElementById('menuToggle');
         const mobileMenu = document.getElementById('mobileMenu');
@@ -458,46 +509,10 @@ fetch('{{ app_url }}/cart/count')
     </script>
     {% block scripts %}{% endblock %}
 
-    <!-- INTRO VIDEO (Hidden by default) -->
-<div id="intro-container" 
-     class="fixed inset-0 bg-black flex items-center justify-center z-[9999] hidden">
-<video id="intro-video" 
-       autoplay 
-       muted 
-       playsinline 
-       preload="auto" 
-       class="w-full h-full object-cover">
-    <source src="{{ app_url }}/assets/intro.mp4" type="video/mp4">
-</video>
-</div>
-<script>
-document.addEventListener("DOMContentLoaded", () => {
 
-    if (!sessionStorage.getItem("introPlayed")) {
-
-        const introContainer = document.getElementById("intro-container");
-        const introVideo = document.getElementById("intro-video");
-
-        introContainer.classList.remove("hidden");
-
-        // Wait until the video actually begins playing
-        introVideo.addEventListener("loadeddata", () => {
-            introVideo.play();
-        });
-
-        // Hide after real finish
-        introVideo.onended = () => {
-            introContainer.classList.add("hidden");
-        };
-
-        sessionStorage.setItem("introPlayed", "1");
-    }
-});
-</script>
 
 </body>
 </html> 
-
 
 
 
