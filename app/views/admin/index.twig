@@ -1,0 +1,40 @@
+{% extends "base.twig" %}
+
+{% block title %}Admin Dashboard{% endblock %}
+
+{% block content %}
+<section class="container mx-auto px-4 py-8">
+    <h1 class="text-2xl font-bold mb-6">Admin Dashboard</h1>
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+        <a href="{{ app_url }}/admin/products" class="bg-white rounded shadow p-6 hover:shadow-lg transition">
+            <h3 class="text-lg font-bold mb-2">Products</h3>
+            <p class="text-gray-600">Manage catalog, stock, and pricing</p>
+        </a>
+        <a href="{{ app_url }}/admin/orders" class="bg-white rounded shadow p-6 hover:shadow-lg transition">
+            <h3 class="text-lg font-bold mb-2">Orders</h3>
+            <p class="text-gray-600">Track and update order status</p>
+        </a>
+        <a href="{{ app_url }}/admin/categories" class="bg-white rounded shadow p-6 hover:shadow-lg transition">
+            <h3 class="text-lg font-bold mb-2">Categories</h3>
+            <p class="text-gray-600">Add & reorder top-level categories</p>
+        </a>
+        <a href="{{ app_url }}/admin/brands" class="bg-white rounded shadow p-6 hover:shadow-lg transition">
+            <h3 class="text-lg font-bold mb-2">Brands</h3>
+            <p class="text-gray-600">Maintain brands and display order</p>
+        </a>
+        <a href="{{ app_url }}/admin/models" class="bg-white rounded shadow p-6 hover:shadow-lg transition">
+            <h3 class="text-lg font-bold mb-2">Phone Models</h3>
+            <p class="text-gray-600">Map models to brands for filters</p>
+        </a>
+        <a href="{{ app_url }}/admin/products/1/images" class="bg-white rounded shadow p-6 hover:shadow-lg transition">
+            <h3 class="text-lg font-bold mb-2">Image Manager</h3>
+            <p class="text-gray-600">Upload and reorder product media</p>
+        </a>
+        <a href="{{ app_url }}/admin/reviews" class="bg-white rounded shadow p-6 hover:shadow-lg transition">
+            <h3 class="text-lg font-bold mb-2">Reviews</h3>
+            <p class="text-gray-600">Approve or reject customer reviews</p>
+        </a>
+    </div>
+</section>
+{% endblock %}
+

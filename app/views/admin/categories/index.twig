@@ -1,0 +1,101 @@
+{% extends "base.twig" %}
+
+{% block title %}Categories{% endblock %}
+
+{% block content %}
+<section class="container mx-auto px-4 py-8">
+
+    <div class="flex justify-between items-center mb-6">
+        <h1 class="text-2xl font-bold">Categories</h1>
+        <a href="{{ app_url }}/admin/categories/create" class="bg-black text-white px-4 py-2 rounded">
+            Add Category
+        </a>
+    </div>
+
+    <div class="bg-white rounded shadow overflow-x-auto">
+        <table class="min-w-full">
+            <thead>
+                <tr class="bg-gray-100 text-left">
+                    <th class="p-3">ID</th>
+                    <th class="p-3">Image</th>
+                    <th class="p-3">Name</th>
+                    <th class="p-3">Slug</th>
+                    <th class="p-3">Order</th>
+                    <th class="p-3">Active</th>
+                    <th class="p-3">Actions</th>
+                </tr>
+            </thead>
+
+            <tbody>
+            {% for c in categories %}
+                <tr class="border-t">
+
+                    <!-- ID -->
+                    <td class="p-3">{{ c.id }}</td>
+
+                    <!-- Image -->
+                    <td class="p-3">
+                        {% if c.image_path %}
+                            <img src="{{ app_url }}/{{ c.image_path }}"
+                                 class="w-12 h-12 object-cover rounded border"
+                                 alt="{{ c.name }}">
+                        {% else %}
+                            <img src="{{ app_url }}/images/placeholder.png"
+                                 class="w-12 h-12 object-cover rounded border opacity-60"
+                                 alt="No image">
+                        {% endif %}
+                    </td>
+
+                    <!-- Name -->
+                    <td class="p-3 font-semibold">{{ c.name }}</td>
+
+                    <!-- Slug -->
+                    <td class="p-3 text-gray-600">{{ c.slug }}</td>
+
+                    <!-- Order -->
+                    <td class="p-3">{{ c.display_order }}</td>
+
+                    <!-- Active -->
+                    <td class="p-3">
+                        {% if c.is_active %}
+                            <span class="text-green-600 font-semibold">Yes</span>
+                        {% else %}
+                            <span class="text-red-600 font-semibold">No</span>
+                        {% endif %}
+                    </td>
+
+                    <!-- Actions -->
+                    <td class="p-3 space-x-2">
+                        <a href="{{ app_url }}/admin/categories/{{ c.id }}/edit" 
+                           class="px-3 py-1 bg-gray-200 rounded hover:bg-gray-300">
+                            Edit
+                        </a>
+
+                        <form action="{{ app_url }}/admin/categories/{{ c.id }}/delete" 
+                              method="post" 
+                              class="inline"
+                              onsubmit="return confirm('Delete this category permanently?')">
+                            
+                            <input type="hidden" name="_token" value="{{ csrf_token }}">
+
+                            <button class="px-3 py-1 bg-red-600 text-white rounded hover:bg-red-700">
+                                Delete
+                            </button>
+                        </form>
+                    </td>
+
+                </tr>
+            {% else %}
+                <tr>
+                    <td colspan="7" class="p-4 text-center text-gray-600">
+                        No categories found.
+                    </td>
+                </tr>
+            {% endfor %}
+            </tbody>
+
+        </table>
+    </div>
+
+</section>
+{% endblock %}

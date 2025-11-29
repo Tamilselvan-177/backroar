@@ -1,0 +1,59 @@
+{% extends "base.twig" %}
+
+{% block title %}Models{% endblock %}
+
+{% block content %}
+<section class="container mx-auto px-4 py-8">
+    <div class="flex justify-between items-center mb-6">
+        <h1 class="text-2xl font-bold">Models</h1>
+        <a href="{{ app_url }}/admin/models/create" class="bg-black text-white px-4 py-2 rounded">Add Model</a>
+    </div>
+
+    <form method="get" class="bg-white rounded shadow p-4 mb-6">
+        <label class="block font-semibold mb-2">Brand</label>
+        <select name="brand_id" class="border p-2 w-full">
+            <option value="">Select Brand</option>
+            {% for b in brands %}
+            <option value="{{ b.id }}" {% if brand_id == b.id %}selected{% endif %}>{{ b.name }}</option>
+            {% endfor %}
+        </select>
+        <div class="mt-4">
+            <button class="bg-black text-white px-4 py-2 rounded">Filter</button>
+        </div>
+    </form>
+
+    <div class="bg-white rounded shadow overflow-x-auto">
+        <table class="min-w-full">
+            <thead>
+                <tr class="bg-gray-100 text-left">
+                    <th class="p-3">ID</th>
+                    <th class="p-3">Name</th>
+                    <th class="p-3">Slug</th>
+                    <th class="p-3">Active</th>
+                    <th class="p-3">Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+            {% for m in models %}
+                <tr class="border-t">
+                    <td class="p-3">{{ m.id }}</td>
+                    <td class="p-3">{{ m.name }}</td>
+                    <td class="p-3">{{ m.slug }}</td>
+                    <td class="p-3">{{ m.is_active ? 'Yes' : 'No' }}</td>
+                    <td class="p-3 space-x-2">
+                        <a href="{{ app_url }}/admin/models/{{ m.id }}/edit" class="px-3 py-1 bg-gray-200 rounded">Edit</a>
+                        <form action="{{ app_url }}/admin/models/{{ m.id }}/delete" method="post" class="inline" onsubmit="return confirm('Delete model?')">
+                            <input type="hidden" name="_token" value="{{ csrf_token }}">
+                            <button class="px-3 py-1 bg-red-600 text-white rounded">Delete</button>
+                        </form>
+                    </td>
+                </tr>
+            {% else %}
+                <tr><td colspan="5" class="p-4 text-center text-gray-600">Select a brand to view models</td></tr>
+            {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</section>
+{% endblock %}
+

@@ -1,0 +1,120 @@
+{% extends "base.twig" %}
+
+{% block title %}{{ title }}{% endblock %}
+
+{% block content %}
+<section class="py-14 bg-[var(--brand-light)] min-h-screen flex items-center">
+    <div class="container mx-auto px-4">
+        <div class="max-w-md mx-auto bg-white rounded-lg shadow-lg p-8 border border-[var(--card-border)]">
+            <h2 class="text-3xl font-bold text-center mb-6 text-[var(--brand-heading)]">Create Account</h2>
+
+            {% if errors.register %}
+                <div class="mb-4 p-4 bg-red-100 border border-red-400 text-red-700 rounded">
+                    {{ errors.register }}
+                </div>
+            {% endif %}
+
+            <form method="POST" action="{{ app_url }}/register" class="space-y-5">
+                <input type="hidden" name="_token" value="{{ csrf_token }}">
+                <!-- Name -->
+                <div>
+                    <label for="name" class="block text-sm font-medium mb-2">Full Name</label>
+                    <input 
+                        type="text" 
+                        id="name" 
+                        name="name" 
+                        value="{{ old.name }}" 
+                        class="w-full px-4 py-3 rounded-lg border border-[var(--card-border)] focus:border-[var(--brand-primary)] focus:ring-2 focus:ring-[var(--brand-primary)] outline-none"
+                        placeholder="John Doe"
+                        required
+                    />
+                    {% if errors.name %}
+                        <p class="mt-1 text-sm text-red-600">{{ errors.name }}</p>
+                    {% endif %}
+                </div>
+
+                <!-- Email -->
+                <div>
+                    <label for="email" class="block text-sm font-medium mb-2">Email Address</label>
+                    <input 
+                        type="email" 
+                        id="email" 
+                        name="email" 
+                        value="{{ old.email }}" 
+                        class="w-full px-4 py-3 rounded-lg border border-[var(--card-border)] focus:border-[var(--brand-primary)] focus:ring-2 focus:ring-[var(--brand-primary)] outline-none"
+                        placeholder="your@email.com"
+                        required
+                    />
+                    {% if errors.email %}
+                        <p class="mt-1 text-sm text-red-600">{{ errors.email }}</p>
+                    {% endif %}
+                </div>
+
+                <!-- Phone -->
+                <div>
+                    <label for="phone" class="block text-sm font-medium mb-2">Phone Number</label>
+                    <input 
+                        type="tel" 
+                        id="phone" 
+                        name="phone" 
+                        value="{{ old.phone }}" 
+                        class="w-full px-4 py-3 rounded-lg border border-[var(--card-border)] focus:border-[var(--brand-primary)] focus:ring-2 focus:ring-[var(--brand-primary)] outline-none"
+                        placeholder="9876543210"
+                        maxlength="10"
+                        required
+                    />
+                    {% if errors.phone %}
+                        <p class="mt-1 text-sm text-red-600">{{ errors.phone }}</p>
+                    {% endif %}
+                </div>
+
+                <!-- Password -->
+                <div>
+                    <label for="password" class="block text-sm font-medium mb-2">Password</label>
+                    <input 
+                        type="password" 
+                        id="password" 
+                        name="password" 
+                        class="w-full px-4 py-3 rounded-lg border border-[var(--card-border)] focus:border-[var(--brand-primary)] focus:ring-2 focus:ring-[var(--brand-primary)] outline-none"
+                        placeholder="••••••••"
+                        required
+                    />
+                    {% if errors.password %}
+                        <p class="mt-1 text-sm text-red-600">{{ errors.password }}</p>
+                    {% endif %}
+                </div>
+
+                <!-- Confirm Password -->
+                <div>
+                    <label for="confirm_password" class="block text-sm font-medium mb-2">Confirm Password</label>
+                    <input 
+                        type="password" 
+                        id="confirm_password" 
+                        name="confirm_password" 
+                        class="w-full px-4 py-3 rounded-lg border border-[var(--card-border)] focus:border-[var(--brand-primary)] focus:ring-2 focus:ring-[var(--brand-primary)] outline-none"
+                        placeholder="••••••••"
+                        required
+                    />
+                    {% if errors.confirm_password %}
+                        <p class="mt-1 text-sm text-red-600">{{ errors.confirm_password }}</p>
+                    {% endif %}
+                </div>
+
+                <!-- Submit Button -->
+                <button 
+                    type="submit" 
+                    class="w-full py-3 px-4 bg-[var(--brand-navbar)] hover:bg-black text-white font-semibold rounded-lg transition duration-200"
+                >
+                    Create Account
+                </button>
+            </form>
+
+            <!-- Login Link -->
+            <p class="mt-6 text-center text-sm">
+                Already have an account? 
+                <a href="{{ app_url }}/login" class="link-accent font-medium">Login here</a>
+            </p>
+        </div>
+    </div>
+</section>
+{% endblock %}

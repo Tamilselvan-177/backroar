@@ -1,0 +1,92 @@
+{% extends "base.twig" %}
+
+{% block title %}Products{% endblock %}
+
+{% block content %}
+<section class="container mx-auto px-4 py-8">
+    <div class="flex justify-between items-center mb-6">
+        <h1 class="text-2xl font-bold">Products</h1>
+        <a href="{{ app_url }}/admin/products/create" class="bg-black text-white px-4 py-2 rounded">Add Product</a>
+    </div>
+
+    <form method="get" class="bg-white rounded shadow p-4 mb-6 grid grid-cols-1 md:grid-cols-4 gap-4">
+        <input type="text" name="q" value="{{ filters.q }}" placeholder="Search name or slug" class="border p-2 w-full" />
+        <select name="category_id" class="border p-2 w-full">
+            <option value="">All Categories</option>
+            {% for c in categories %}
+            <option value="{{ c.id }}" {% if filters.category_id == c.id %}selected{% endif %}>{{ c.name }}</option>
+            {% endfor %}
+        </select>
+        <select name="brand_id" class="border p-2 w-full">
+            <option value="">All Brands</option>
+            {% for b in brands %}
+            <option value="{{ b.id }}" {% if filters.brand_id == b.id %}selected{% endif %}>{{ b.name }}</option>
+            {% endfor %}
+        </select>
+        <select name="active" class="border p-2 w-full">
+            <option value="">Any Status</option>
+            <option value="1" {% if filters.active == '1' %}selected{% endif %}>Active</option>
+            <option value="0" {% if filters.active == '0' %}selected{% endif %}>Inactive</option>
+        </select>
+        <div class="md:col-span-4 flex justify-end">
+            <button class="bg-black text-white px-4 py-2 rounded">Filter</button>
+        </div>
+    </form>
+
+    <div class="bg-white rounded shadow overflow-x-auto">
+        <table class="min-w-full">
+            <thead>
+                <tr class="bg-gray-100 text-left">
+                    <th class="p-3">ID</th>
+                    <th class="p-3">Name</th>
+                    <th class="p-3">Category</th>
+                    <th class="p-3">Brand</th>
+                    <th class="p-3">Price</th>
+                    <th class="p-3">Stock</th>
+                    <th class="p-3">Active</th>
+                    <th class="p-3">Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+            {% for p in products %}
+                <tr class="border-t">
+                    <td class="p-3">{{ p.id }}</td>
+                    <td class="p-3">{{ p.name }}</td>
+                    <td class="p-3">{{ p.category_name }}</td>
+                    <td class="p-3">{{ p.brand_name }}</td>
+                    <td class="p-3">{{ p.price }}</td>
+                    <td class="p-3">{{ p.stock_quantity }}</td>
+                    <td class="p-3">{{ p.is_active ? 'Yes' : 'No' }}</td>
+                    <td class="p-3 space-x-2">
+                        <a href="{{ app_url }}/admin/products/{{ p.id }}/edit" class="px-3 py-1 bg-gray-200 rounded">Edit</a>
+                        <a href="{{ app_url }}/admin/products/{{ p.id }}/images" class="px-3 py-1 bg-gray-200 rounded">Images</a>
+                        <form action="{{ app_url }}/admin/products/{{ p.id }}/toggle-active" method="post" class="inline">
+                            <input type="hidden" name="_token" value="{{ csrf_token }}">
+                            <button class="px-3 py-1 rounded {{ p.is_active ? 'bg-yellow-500 text-white' : 'bg-green-600 text-white' }}">{{ p.is_active ? 'Deactivate' : 'Activate' }}</button>
+                        </form>
+                        <form action="{{ app_url }}/admin/products/{{ p.id }}/toggle-featured" method="post" class="inline">
+                            <input type="hidden" name="_token" value="{{ csrf_token }}">
+                            <button class="px-3 py-1 rounded {{ p.is_featured ? 'bg-blue-600 text-white' : 'bg-gray-300' }}">Featured</button>
+                        </form>
+                        <form action="{{ app_url }}/admin/products/{{ p.id }}/delete" method="post" class="inline" onsubmit="return confirm('Delete product?')">
+                            <input type="hidden" name="_token" value="{{ csrf_token }}">
+                            <button class="px-3 py-1 bg-red-600 text-white rounded">Delete</button>
+                        </form>
+                    </td>
+                </tr>
+            {% else %}
+                <tr><td colspan="8" class="p-4 text-center text-gray-600">No products</td></tr>
+            {% endfor %}
+            </tbody>
+        </table>
+    </div>
+
+    {% if pagination.total_pages > 1 %}
+    <div class="mt-6 flex justify-center space-x-2">
+        {% for i in 1..pagination.total_pages %}
+            <a href="{{ app_url }}/admin/products?page={{ i }}" class="px-3 py-1 rounded {{ i == pagination.current_page ? 'bg-black text-white' : 'bg-gray-200' }}">{{ i }}</a>
+        {% endfor %}
+    </div>
+    {% endif %}
+</section>
+{% endblock %}

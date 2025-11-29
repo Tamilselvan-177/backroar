@@ -1,0 +1,59 @@
+{% extends "base.twig" %}
+
+{% block title %}Orders{% endblock %}
+
+{% block content %}
+<section class="container mx-auto px-4 py-8">
+    <h1 class="text-2xl font-bold mb-6">Orders</h1>
+
+    <div class="bg-white rounded shadow overflow-x-auto">
+        <table class="min-w-full">
+            <thead>
+                <tr class="bg-gray-100 text-left">
+                    <th class="p-3">#</th>
+                    <th class="p-3">Order Number</th>
+                    <th class="p-3">User</th>
+                    <th class="p-3">Total</th>
+                    <th class="p-3">Payment</th>
+                    <th class="p-3">Status</th>
+                    <th class="p-3">Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+            {% for o in orders %}
+                <tr class="border-t">
+                    <td class="p-3">{{ o.id }}</td>
+                    <td class="p-3">{{ o.order_number }}</td>
+                    <td class="p-3">{{ o.user_id }}</td>
+                    <td class="p-3">{{ o.total_amount }}</td>
+                    <td class="p-3">{{ o.payment_status }}</td>
+                    <td class="p-3">{{ o.order_status }}</td>
+                    <td class="p-3">
+                        <form action="{{ app_url }}/admin/orders/{{ o.id }}/status" method="post" class="flex items-center space-x-2">
+                            <input type="hidden" name="_token" value="{{ csrf_token }}">
+                            <select name="order_status" class="border p-1">
+                                {% for s in ['Pending','Confirmed','Processing','Shipped','Delivered','Cancelled'] %}
+                                <option value="{{ s }}" {% if s == o.order_status %}selected{% endif %}>{{ s }}</option>
+                                {% endfor %}
+                            </select>
+                            <button class="px-3 py-1 bg-black text-white rounded">Update</button>
+                        </form>
+                    </td>
+                </tr>
+            {% else %}
+                <tr><td colspan="7" class="p-4 text-center text-gray-600">No orders</td></tr>
+            {% endfor %}
+            </tbody>
+        </table>
+    </div>
+
+    {% if pagination.total_pages > 1 %}
+    <div class="mt-6 flex justify-center space-x-2">
+        {% for i in 1..pagination.total_pages %}
+            <a href="{{ app_url }}/admin/orders?page={{ i }}" class="px-3 py-1 rounded {{ i == pagination.current_page ? 'bg-black text-white' : 'bg-gray-200' }}">{{ i }}</a>
+        {% endfor %}
+    </div>
+    {% endif %}
+</section>
+{% endblock %}
+

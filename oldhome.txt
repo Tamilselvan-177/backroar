@@ -1,0 +1,853 @@
+{% extends "base.twig" %}
+
+{% block title %}BlackRoar — Mobile Cases & Accessories{% endblock %}
+
+{% block content %}
+    <!-- Hero -->
+    <section id="home" class="py-0">
+        <img src="{{ app_url }}/images/hero-banner.png" alt="BlackRoar Hero" class="w-full h-auto md:w-[1891px] md:h-[824px] object-contain md:object-cover mx-auto max-h-[60vh] md:max-h-[824px]" />
+    </section>
+
+    <!-- Collections / Categories -->
+    <section id="collections" class="py-14 bg-white scroll-mt-16 md:scroll-mt-24">
+        <div class="container mx-auto px-4">
+            <h2 class="text-2xl md:text-4xl font-bold text-center mb-10 text-[var(--brand-heading)] uppercase">Shop by Categories</h2>
+            <div class="grid grid-cols-2 lg:grid-cols-4 gap-6">
+                <a href="{{ app_url }}/category/mobile-backcases" class="block overflow-hidden bg-white border border-[var(--card-border)] shadow hover-scale">
+                    <div class="aspect-square bg-gradient-to-b from-blue-100 to-white flex items-center justify-center">
+                        <img src="{{ app_url }}/images/categories/backcase.png" alt="Mobile Backcases" class="block w-full h-full object-cover" loading="lazy" />
+                    </div>
+                    <div class="bg-black text-white text-center font-bold uppercase py-3">Mobile Backcases</div>
+                </a>
+                <a href="{{ app_url }}/category/mobile-phones" class="block overflow-hidden bg-white border border-[var(--card-border)] shadow hover-scale">
+                    <div class="aspect-square bg-gradient-to-b from-blue-100 to-white flex items-center justify-center">
+                        <img src="{{ app_url }}/images/categories/phone.png" alt="Mobile Phones" class="block w-full h-full object-cover" loading="lazy" />
+                    </div>
+                    <div class="bg-black text-white text-center font-bold uppercase py-3">Mobile Phones</div>
+                </a>
+                <a href="{{ app_url }}/category/tempered-glass" class="block overflow-hidden bg-white border border-[var(--card-border)] shadow hover-scale">
+                    <div class="aspect-square bg-gradient-to-b from-blue-100 to-white flex items-center justify-center">
+                        <img src="{{ app_url }}/images/categories/tempered.png" alt="Tempered Glass" class="block w-full h-full object-cover" loading="lazy" />
+                    </div>
+                    <div class="bg-black text-white text-center font-bold uppercase py-3">Tempered Glass</div>
+                </a>
+                <a href="{{ app_url }}/category/gadgets" class="block overflow-hidden bg-white border border-[var(--card-border)] shadow hover-scale">
+                    <div class="aspect-square bg-gradient-to-b from-blue-100 to-white flex items-center justify-center">
+                        <img src="{{ app_url }}/images/categories/gadgets.png" alt="Gadgets" class="block w-full h-full object-cover" loading="lazy" />
+                    </div>
+                    <div class="bg-black text-white text-center font-bold uppercase py-3">Gadgets</div>
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Featured Products - Horizontal Scroll -->
+{% set featured_by_category = {} %}
+
+{% for product in featured_products %}
+    {% set cat = product.category_name %}
+
+    {% if cat is empty %}
+        {% set cat = 'Other' %}
+    {% endif %}
+
+    {% if featured_by_category[cat] is not defined %}
+        {% set featured_by_category = featured_by_category|merge({ (cat): [product] }) %}
+    {% else %}
+        {% set list = featured_by_category[cat] %}
+        {% set list = list|merge([product]) %}
+        {% set featured_by_category = featured_by_category|merge({ (cat): list }) %}
+    {% endif %}
+{% endfor %}
+
+<section id="shop" class="py-14 bg-[var(--brand-light)] scroll-mt-16 md:scroll-mt-24">
+    <div class="container mx-auto px-4">
+
+        {% if featured_by_category|length == 0 %}
+            <p class="text-gray-600">No featured products available.</p>
+        {% endif %}
+
+        {% for cat, items in featured_by_category %}
+            <div class="mb-10">
+
+                <!-- CATEGORY NAME (WITHOUT 'Featured') -->
+                <h2 class="text-2xl md:text-4xl font-bold text-[var(--brand-heading)] mb-6">
+                    {{ cat }}
+                </h2>
+
+                <!-- Horizontal Scroll Row -->
+                <div class="flex gap-5 overflow-x-auto pb-4 px-1 snap-x snap-mandatory scrollbar-hide"
+                     style="scroll-behavior:smooth;">
+
+                    {% for product in items %}
+                    <div class="min-w-[220px] max-w-[220px] bg-[var(--card-bg)] shadow hover-scale overflow-hidden 
+                                border border-[var(--card-border)] rounded-xl snap-start flex-shrink-0">
+
+                        <div class="relative">
+                            <img src="{{ app_url }}/{{ product.image_path }}"
+                                 alt="{{ product.name }}"
+                                 class="w-full h-48 object-cover" loading="lazy" />
+
+                            {% if product.is_featured %}
+                                <span class="absolute top-3 left-3 badge">Bestseller</span>
+                            {% endif %}
+                        </div>
+
+                        <div class="p-4">
+                            <h3 class="font-semibold line-clamp-2">{{ product.name }}</h3>
+
+                            <div class="mt-3 flex items-center justify-between">
+                                <span class="text-lg font-bold">₹{{ product.price }}</span>
+                                <a href="{{ app_url }}/product/{{ product.slug }}"
+                                   class="text-sm text-[var(--brand-primary)] hover:text-[var(--brand-primary-hover)]">
+                                   View
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                    {% endfor %}
+
+                </div>
+            </div>
+        {% endfor %}
+    </div>
+</section>
+
+    <!-- Benefits -->
+    <section class="py-14 bg-white">
+        <div class="container mx-auto px-4">
+            <div class="grid sm:grid-cols-2 lg:grid-cols-4 gap-6">
+                <div class="p-6 bg-[var(--card-bg-alt)] shadow hover-scale border border-[var(--card-border)]">
+                    <h4 class="font-semibold">Free Shipping</h4>
+                    <p class="text-sm text-gray-600 mt-1">On orders over ₹999</p>
+                </div>
+                <div class="p-6 bg-[var(--card-bg-alt)] shadow hover-scale border border-[var(--card-border)]">
+                    <h4 class="font-semibold">7-Day Return</h4>
+                    <p class="text-sm text-gray-600 mt-1">Hassle-free exchanges</p>
+                </div>
+                <div class="p-6 bg-[var(--card-bg-alt)] shadow hover-scale border border-[var(--card-border)]">
+                    <h4 class="font-semibold">Secure Checkout</h4>
+                    <p class="text-sm text-gray-600 mt-1">Payments protected</p>
+                </div>
+                <div class="p-6 bg-[var(--card-bg-alt)] shadow hover-scale border border-[var(--card-border)]">
+                    <h4 class="font-semibold">Top Quality</h4>
+                    <p class="text-sm text-gray-600 mt-1">Premium materials</p>
+                </div>
+            </div>
+        </div>
+    </section>
+{% endblock %}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+intro base.html
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>{% block title %}BlackRoar — Mobile Cases & Accessories{% endblock %}</title>
+    <meta name="csrf-token" content="{{ csrf_token }}">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
+    <style>
+        :root {
+            --brand-bg: #F5F5F5;
+            --brand-navbar: #1A1A1A;
+            --brand-footer: #1A1A1A;
+            --brand-heading: #88898A;
+            --brand-text: #1A1A1A;
+            --brand-primary: #88898A;
+            --brand-primary-hover: #C4C4C4;
+            --brand-accent: #0066FF;
+            --card-bg: #FFFFFF;
+            --card-bg-alt: #F5F5F5;
+            --card-border: #C4C4C4;
+            --brand-light: #F5F5F5;
+        }
+        body { font-family: 'Poppins', sans-serif; color: var(--brand-text); }
+        .gradient-bg { background: linear-gradient(135deg, var(--brand-navbar) 0%, #1a1a1a 100%); }
+        .text-gradient { background: linear-gradient(90deg, var(--brand-heading) 0%, var(--brand-primary) 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+        .hover-scale { transition: transform 0.25s ease; }
+        .hover-scale:hover { transform: translateY(-2px) scale(1.02); }
+        .badge { display: inline-block; padding: 0.25rem 0.6rem; font-size: 0.75rem; border-radius: 999px; background: var(--brand-primary); color: #fff; }
+        .btn-primary { background: var(--brand-primary); color: #fff; }
+        .btn-primary:hover { background: var(--brand-primary-hover); }
+        .btn-accent { background: var(--brand-accent); color: #fff; }
+        .btn-accent:hover { background: #3388ff; }
+        .link-hover:hover { color: var(--brand-primary); }
+        .link-accent { color: var(--brand-primary); }
+        .link-accent:hover { color: var(--brand-primary-hover); }
+    </style>
+    {% block styles %}{% endblock %}
+    <script>
+        (function() {
+            const token = '{{ csrf_token }}';
+            window.CSRF_TOKEN = token;
+
+            const originalFetch = window.fetch ? window.fetch.bind(window) : null;
+            if (originalFetch) {
+                window.fetch = function(resource, config) {
+                    config = config || {};
+                    const method = (config.method || 'GET').toUpperCase();
+                    if (['POST', 'PUT', 'PATCH', 'DELETE'].includes(method)) {
+                        if (!config.headers) {
+                            config.headers = {};
+                        }
+                        if (config.headers instanceof Headers) {
+                            config.headers.set('X-CSRF-TOKEN', token);
+                        } else if (Array.isArray(config.headers)) {
+                            config.headers.push(['X-CSRF-TOKEN', token]);
+                        } else {
+                            config.headers['X-CSRF-TOKEN'] = token;
+                        }
+                    }
+                    return originalFetch(resource, config);
+                };
+            }
+
+            document.addEventListener('DOMContentLoaded', function() {
+                document.querySelectorAll('form').forEach(function(form) {
+                    const method = (form.getAttribute('method') || 'GET').toUpperCase();
+                    if (method !== 'POST') {
+                        return;
+                    }
+                    if (!form.querySelector('input[name="_token"]')) {
+                        const input = document.createElement('input');
+                        input.type = 'hidden';
+                        input.name = '_token';
+                        input.value = token;
+                        form.appendChild(input);
+                    }
+                });
+            });
+        })();
+    </script>
+</head>
+
+<body class="bg-[var(--brand-bg)]">
+    <!-- Navbar -->
+    <nav class="sticky top-0 w-full z-50 bg-white shadow-sm">
+        <div class="container mx-auto px-4 py-3 flex items-center justify-between">
+            <div class="flex items-center gap-2">
+                <button id="menuToggle" aria-label="Menu" class="md:hidden p-2 rounded-lg text-[var(--brand-text)] hover:bg-black/5">
+                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"/></svg>
+                </button>
+                <a href="{{ app_url }}/" class="flex items-center gap-2">
+                    <img src="{{ app_url }}/images/logo.png" alt="BlackRoar" class="w-50 h-10 square" />
+                </a>
+            </div>
+            <div class="hidden md:flex items-center gap-6">
+                <a href="{{ app_url }}/" class="text-[var(--brand-text)] link-hover">Home</a>
+                <a href="{{ app_url }}/products" class="text-[var(--brand-text)] link-hover">Shop</a>
+                <a href="{{ app_url }}/categories" class="text-[var(--brand-text)] link-hover">Categories</a>
+                <a href="{{ app_url }}/about" class="text-[var(--brand-text)] link-hover">About</a>
+                <a href="{{ app_url }}/contact" class="text-[var(--brand-text)] link-hover">Contact</a>
+            </div>
+            <div class="flex items-center gap-2">
+                <input type="search" id="searchInput" placeholder="Search cases" class="hidden md:block px-3 py-2 rounded-lg border border-[var(--card-border)] focus:border-[var(--brand-primary)] focus:ring-2 focus:ring-[var(--brand-primary)] outline-none" />
+                <a href="{{ app_url }}/cart" aria-label="Cart" class="hidden md:inline-flex items-center gap-2 px-3 py-2 rounded-lg bg-[var(--brand-navbar)] hover:bg-black text-white text-sm">
+                    <svg class="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M6 6h14l-2 8H8L6 6z" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><circle cx="9" cy="20" r="1"/><circle cx="17" cy="20" r="1"/></svg>
+                    <span>Cart</span>
+                    <span id="cartCount" class="ml-1 bg-red-500 text-white text-xs rounded-full px-2 py-0.5 hidden"></span>
+                </a>
+                <div class="relative userDropdown">
+                    {% if session.user_id %}
+                        <button class="hidden md:inline-flex items-center gap-2 px-3 py-2 rounded-lg bg-[var(--brand-navbar)] hover:bg-black text-white text-sm userDropdownToggle">
+                            <svg class="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor"><circle cx="12" cy="8" r="3" stroke-width="2"/><path d="M6 20c0-3.314 2.686-6 6-6s6 2.686 6 6" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                            <span>{{ session.user_name }}</span>
+                            <svg class="w-4 h-4 ml-1" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
+                        </button>
+                        <div class="userDropdownMenu absolute right-0 mt-2 w-48 bg-white rounded-md shadow-lg py-1 hidden">
+                            <a href="{{ app_url }}/account" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">My Profile</a>
+                            <a href="{{ app_url }}/orders" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Orders</a>
+                            <a href="{{ app_url }}/wishlist" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Wishlist</a>
+                            <a href="{{ app_url }}/logout" class="block px-4 py-2 text-sm text-red-600 hover:bg-gray-100">Logout</a>
+                        </div>
+                    {% else %}
+                        <button class="hidden md:inline-flex items-center gap-2 px-3 py-2 rounded-lg bg-[var(--brand-navbar)] hover:bg-black text-white text-sm userDropdownToggle">
+                            <svg class="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor"><circle cx="12" cy="8" r="3" stroke-width="2"/><path d="M6 20c0-3.314 2.686-6 6-6s6 2.686 6 6" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                            <span>Login</span>
+                            <svg class="w-4 h-4 ml-1" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
+                        </button>
+                        <div class="userDropdownMenu absolute right-0 mt-2 w-48 bg-white rounded-md shadow-lg py-1 hidden">
+                            <a href="{{ app_url }}/login" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Login</a>
+                            <a href="{{ app_url }}/register" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Register</a>
+                        </div>
+                    {% endif %}
+                </div>
+                
+         <!-- Cart Icon with Badge -->
+<a href="{{ app_url }}/cart" class="relative">
+    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z"></path>
+    </svg>
+    {% if session.user_id %}
+    <span id="cart-count" class="absolute -top-2 -right-2 bg-red-600 text-white text-xs font-bold rounded-full w-5 h-5 flex items-center justify-center">0</span>
+    {% endif %}
+</a>
+
+{% if session.user_id %}
+<script>
+// Update cart count on page load
+fetch('{{ app_url }}/cart/count')
+    .then(res => res.json())
+    .then(data => {
+        const badge = document.getElementById('cart-count');
+        if (badge && data.count > 0) {
+            badge.textContent = data.count;
+            badge.style.display = 'flex';
+        } else if (badge) {
+            badge.style.display = 'none';
+        }
+    });
+</script>
+{% endif %}
+                {% if session.user_id %}
+                    <a href="{{ app_url }}/account" aria-label="Account" class="md:hidden p-2 rounded-lg bg-[var(--brand-navbar)] text-white hover:bg-black">
+                        <svg class="w-6 h-6" viewBox="0 0 24 24" fill="none" stroke="currentColor"><circle cx="12" cy="8" r="3" stroke-width="2"/><path d="M6 20c0-3.314 2.686-6 6-6s6 2.686 6 6" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                    </a>
+                {% else %}
+                    <a href="{{ app_url }}/login" aria-label="Account" class="md:hidden p-2 rounded-lg bg-[var(--brand-navbar)] text-white hover:bg-black">
+                        <svg class="w-6 h-6" viewBox="0 0 24 24" fill="none" stroke="currentColor"><circle cx="12" cy="8" r="3" stroke-width="2"/><path d="M6 20c0-3.314 2.686-6 6-6s6 2.686 6 6" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                    </a>
+                {% endif %}
+            </div>
+        </div>
+        <div id="mobileMenu" class="md:hidden hidden border-t border-gray-200 bg-white">
+            <div class="px-4 py-3 space-y-3">
+                <input type="search" placeholder="Search cases" class="w-full px-3 py-2 rounded-lg border border-[var(--card-border)] focus:border-[var(--brand-primary)] focus:ring-2 focus:ring-[var(--brand-primary)] outline-none" />
+                <a href="{{ app_url }}/" class="block text-[var(--brand-text)]">Home</a>
+                <a href="{{ app_url }}/products" class="block text-[var(--brand-text)]">Shop</a>
+                <a href="{{ app_url }}/categories" class="block text-[var(--brand-text)]">Categories</a>
+                <a href="{{ app_url }}/about" class="block text-[var(--brand-text)]">About</a>
+                <a href="{{ app_url }}/contact" class="block text-[var(--brand-text)]">Contact</a>
+                {% if not session.user_id %}
+                    <a href="{{ app_url }}/login" class="block text-[var(--brand-text)]">Login</a>
+                {% endif %}
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    {% block content %}{% endblock %}
+
+    <!-- Footer -->
+    <footer class="bg-black text-white py-12">
+        <div class="container mx-auto px-4">
+            <div class="grid grid-cols-1 md:grid-cols-4 gap-8 mb-8">
+                <div>
+                    <h4 class="text-lg font-semibold mb-4">USEFUL LINKS</h4>
+                    <div class="w-12 h-1 bg-green-500 mb-4"></div>
+                    <ul class="space-y-2 text-gray-400">
+                        <li><a href="{{ app_url }}/reviews" class="hover:text-white">Love from the Customers</a></li>
+                        <li><a href="{{ app_url }}/about" class="hover:text-white">About Us</a></li>
+                        <li><a href="{{ app_url }}/refund-policy" class="hover:text-white">Refund Policy</a></li>
+                        <li><a href="{{ app_url }}/privacy-policy" class="hover:text-white">Privacy Policy</a></li>
+                        <li><a href="{{ app_url }}/shipping-policy" class="hover:text-white">Shipping policy</a></li>
+                        <li><a href="{{ app_url }}/terms" class="hover:text-white">Term and Conditions</a></li>
+                    </ul>
+                </div>
+                <div>
+                    <h4 class="text-lg font-semibold mb-4">ACCOUNT</h4>
+                    <div class="w-12 h-1 bg-green-500 mb-4"></div>
+                    <ul class="space-y-2 text-gray-400">
+                        <li><a href="{{ app_url }}/orders" class="hover:text-white">My Orders</a></li>
+                        <li><a href="{{ app_url }}/account" class="hover:text-white">My Account</a></li>
+                        <li><a href="{{ app_url }}/track-order" class="hover:text-white">Track order</a></li>
+                        <li><a href="{{ app_url }}/checkout" class="hover:text-white">Checkout</a></li>
+                        <li><a href="{{ app_url }}/contact" class="hover:text-white">Contact us</a></li>
+                    </ul>
+                </div>
+                <div>
+                    <h4 class="text-lg font-semibold mb-4">HELP CENTER</h4>
+                    <div class="w-12 h-1 bg-green-500 mb-4"></div>
+                    <p class="text-gray-400 mb-2">Support time : 09.30 AM to 06.00 PM (Monday to saturday)</p>
+                    <p class="text-gray-400 mb-4">Contact@backroar.in</p>
+                    <h5 class="font-semibold mb-2">Connect with us</h5>
+                    <div class="flex space-x-4">
+                        <a href="#" class="text-gray-400 hover:text-white"><svg fill="currentColor" viewBox="0 0 24 24" class="h-6 w-6" aria-hidden="true"><path fill-rule="evenodd" d="M22 12c0-5.523-4.477-10-10-10S2 6.477 2 12c0 4.991 3.657 9.128 8.438 9.878v-6.987h-2.54V12h2.54V9.797c0-2.506 1.492-3.89 3.776-3.89 1.094 0 2.238.195 2.238.195v2.46h-1.26c-1.243 0-1.63.771-1.63 1.562V12h2.773l-.443 2.89h-2.33V22C17.363 21.128 22 16.991 22 12z" clip-rule="evenodd" /></svg></a>
+                        <a href="#" class="text-gray-400 hover:text-white"><svg fill="currentColor" viewBox="0 0 24 24" class="h-6 w-6" aria-hidden="true"><path fill-rule="evenodd" d="M12.315 2c2.43 0 2.784.013 3.715.056 8.825.38 9.467 7.594 9.513 7.687.05.173.05.376.05.592 0 2.43-.013 2.784-.056 3.715-.38 8.825-7.594 9.467-7.687 9.513-.173.05-.376.05-.592.05-2.43 0-2.784-.013-3.715-.056-8.825-.38-9.467-7.594-9.513-7.687-.05-.173-.05-.376-.05-.592 0-2.43.013-2.784.056-3.715.38-8.825 7.594-9.467 7.687-9.513.173-.05.376-.05.592-.05zM12 1.802c-2.686 0-3.038.014-4.122.067-7.21.325-7.698 8.048-7.75 8.179-.04.1-.04.247-.04.423 0 2.686.014 3.038.067 4.122.325 7.21 8.048 7.698 8.179 7.75.1.04.247.04.423.04 2.686 0 3.038-.014 4.122-.067 7.21-.325 7.698-8.048 7.75-8.179.04-.1.04-.247.04-.423 0-2.686-.014-3.038-.067-4.122-.325-7.21-8.048-7.698-8.179-7.75-.1-.04-.247-.04-.423-.04zm0 1.883c2.15 0 2.414.009 3.26.051 6.5.31 6.839 7.167 6.886 7.283.035.088.035.216.035.386 0 2.15-.009 2.414-.051 3.26-.31 6.5-7.167 6.839-7.283 6.886-.088.035-.216.035-.386.035-2.15 0-2.414-.009-3.26-.051-6.5-.31-6.839-7.167-6.886-7.283-.035-.088-.035-.216-.035-.386 0-2.15.009-2.414.051-3.26.31-6.5 7.167-6.839 7.283-6.886.088-.035.216-.035.386-.035zm0 3.627c-2.275 0-4.111 1.835-4.111 4.11s1.836 4.11 4.111 4.11 4.111-1.835 4.111-4.11-1.836-4.11-4.111-4.11zm0 6.775c-1.472 0-2.665-1.193-2.665-2.665S10.528 9.802 12 9.802s2.665 1.193 2.665 2.665-1.193 2.665-2.665 2.665z" clip-rule="evenodd" /></svg></a>
+                    </div>
+                </div>
+                <div>
+                    <h4 class="text-lg font-semibold mb-4">REGISTERED OFFICE ADDRESS:</h4>
+                    <div class="w-12 h-1 bg-green-500 mb-4"></div>
+                    <p class="text-gray-400">Backroar</p>
+                    <p class="text-gray-400">503 Rhythm Plaza</p>
+                    <p class="text-gray-400">Nikol Ringroad</p>
+                    <p class="text-gray-400">Ahmedabad Gujarat - 382350</p>
+                </div>
+            </div>
+            <div class="border-t border-gray-700 pt-8 flex flex-col md:flex-row items-center justify-between text-sm text-gray-400">
+                <p>Copyright 2025 © Backroar.in</p>
+                <div class="flex gap-2 mt-4 md:mt-0">
+                    <img src="{{ app_url }}/images/payments.png" alt="Payment Methods" class="h-6">
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // Mobile Menu Toggle
+        const menuToggle = document.getElementById('menuToggle');
+        const mobileMenu = document.getElementById('mobileMenu');
+        if (menuToggle && mobileMenu) {
+            menuToggle.addEventListener('click', () => {
+                mobileMenu.classList.toggle('hidden');
+            });
+            mobileMenu.querySelectorAll('a').forEach(a => {
+                a.addEventListener('click', () => mobileMenu.classList.add('hidden'));
+            });
+        }
+
+        // User Dropdown Menu Toggle
+        document.querySelectorAll('.userDropdownToggle').forEach(button => {
+            const dropdown = button.closest('.userDropdown');
+            const menu = dropdown.querySelector('.userDropdownMenu');
+
+            button.addEventListener('click', (e) => {
+                e.stopPropagation();
+                menu.classList.toggle('hidden');
+            });
+
+            menu.querySelectorAll('a').forEach(link => {
+                link.addEventListener('click', () => {
+                    menu.classList.add('hidden');
+                });
+            });
+        });
+
+        // Close dropdown when clicking outside
+        document.addEventListener('click', () => {
+            document.querySelectorAll('.userDropdownMenu').forEach(menu => {
+                menu.classList.add('hidden');
+            });
+        });
+
+        // Cart Functions
+        function getCart(){ try { return JSON.parse(localStorage.getItem('cart')||'[]'); } catch(e){ return []; } }
+        function saveCart(c){ localStorage.setItem('cart', JSON.stringify(c)); updateCartCount(); }
+        function updateCartCount() {
+            const cart = getCart();
+            const count = cart.reduce((sum, item) => sum + (item.qty || 1), 0);
+            const badge = document.getElementById('cartCount');
+            if (badge) {
+                if (count > 0) {
+                    badge.textContent = count;
+                    badge.classList.remove('hidden');
+                } else {
+                    badge.classList.add('hidden');
+                }
+            }
+        }
+        updateCartCount();
+    </script>
+    {% block scripts %}{% endblock %}
+
+    <!-- INTRO VIDEO (Hidden by default) -->
+<div id="intro-container" 
+     class="fixed inset-0 bg-black flex items-center justify-center z-[9999] hidden">
+<video id="intro-video" 
+       autoplay 
+       muted 
+       playsinline 
+       preload="auto" 
+       class="w-full h-full object-cover">
+    <source src="{{ app_url }}/assets/intro.mp4" type="video/mp4">
+</video>
+</div>
+<script>
+document.addEventListener("DOMContentLoaded", () => {
+
+    if (!sessionStorage.getItem("introPlayed")) {
+
+        const introContainer = document.getElementById("intro-container");
+        const introVideo = document.getElementById("intro-video");
+
+        introContainer.classList.remove("hidden");
+
+        // Wait until the video actually begins playing
+        introVideo.addEventListener("loadeddata", () => {
+            introVideo.play();
+        });
+
+        // Hide after real finish
+        introVideo.onended = () => {
+            introContainer.classList.add("hidden");
+        };
+
+        sessionStorage.setItem("introPlayed", "1");
+    }
+});
+</script>
+
+</body>
+</html> 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+old - base.html
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>{% block title %}BlackRoar — Mobile Cases & Accessories{% endblock %}</title>
+    <meta name="csrf-token" content="{{ csrf_token }}">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
+    <style>
+        :root {
+            --brand-bg: #F5F5F5;
+            --brand-navbar: #1A1A1A;
+            --brand-footer: #1A1A1A;
+            --brand-heading: #88898A;
+            --brand-text: #1A1A1A;
+            --brand-primary: #88898A;
+            --brand-primary-hover: #C4C4C4;
+            --brand-accent: #0066FF;
+            --card-bg: #FFFFFF;
+            --card-bg-alt: #F5F5F5;
+            --card-border: #C4C4C4;
+            --brand-light: #F5F5F5;
+        }
+        body { font-family: 'Poppins', sans-serif; color: var(--brand-text); }
+        .gradient-bg { background: linear-gradient(135deg, var(--brand-navbar) 0%, #1a1a1a 100%); }
+        .text-gradient { background: linear-gradient(90deg, var(--brand-heading) 0%, var(--brand-primary) 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+        .hover-scale { transition: transform 0.25s ease; }
+        .hover-scale:hover { transform: translateY(-2px) scale(1.02); }
+        .badge { display: inline-block; padding: 0.25rem 0.6rem; font-size: 0.75rem; border-radius: 999px; background: var(--brand-primary); color: #fff; }
+        .btn-primary { background: var(--brand-primary); color: #fff; }
+        .btn-primary:hover { background: var(--brand-primary-hover); }
+        .btn-accent { background: var(--brand-accent); color: #fff; }
+        .btn-accent:hover { background: #3388ff; }
+        .link-hover:hover { color: var(--brand-primary); }
+        .link-accent { color: var(--brand-primary); }
+        .link-accent:hover { color: var(--brand-primary-hover); }
+    </style>
+    {% block styles %}{% endblock %}
+    <script>
+        (function() {
+            const token = '{{ csrf_token }}';
+            window.CSRF_TOKEN = token;
+
+            const originalFetch = window.fetch ? window.fetch.bind(window) : null;
+            if (originalFetch) {
+                window.fetch = function(resource, config) {
+                    config = config || {};
+                    const method = (config.method || 'GET').toUpperCase();
+                    if (['POST', 'PUT', 'PATCH', 'DELETE'].includes(method)) {
+                        if (!config.headers) {
+                            config.headers = {};
+                        }
+                        if (config.headers instanceof Headers) {
+                            config.headers.set('X-CSRF-TOKEN', token);
+                        } else if (Array.isArray(config.headers)) {
+                            config.headers.push(['X-CSRF-TOKEN', token]);
+                        } else {
+                            config.headers['X-CSRF-TOKEN'] = token;
+                        }
+                    }
+                    return originalFetch(resource, config);
+                };
+            }
+
+            document.addEventListener('DOMContentLoaded', function() {
+                document.querySelectorAll('form').forEach(function(form) {
+                    const method = (form.getAttribute('method') || 'GET').toUpperCase();
+                    if (method !== 'POST') {
+                        return;
+                    }
+                    if (!form.querySelector('input[name="_token"]')) {
+                        const input = document.createElement('input');
+                        input.type = 'hidden';
+                        input.name = '_token';
+                        input.value = token;
+                        form.appendChild(input);
+                    }
+                });
+            });
+        })();
+    </script>
+</head>
+
+<body class="bg-[var(--brand-bg)]">
+    <!-- Navbar -->
+    <nav class="sticky top-0 w-full z-50 bg-white shadow-sm">
+        <div class="container mx-auto px-4 py-3 flex items-center justify-between">
+            <div class="flex items-center gap-2">
+                <button id="menuToggle" aria-label="Menu" class="md:hidden p-2 rounded-lg text-[var(--brand-text)] hover:bg-black/5">
+                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"/></svg>
+                </button>
+                <a href="{{ app_url }}/" class="flex items-center gap-2">
+                    <img src="{{ app_url }}/images/logo.png" alt="BlackRoar" class="w-50 h-10 square" />
+                </a>
+            </div>
+            <div class="hidden md:flex items-center gap-6">
+                <a href="{{ app_url }}/" class="text-[var(--brand-text)] link-hover">Home</a>
+                <a href="{{ app_url }}/products" class="text-[var(--brand-text)] link-hover">Shop</a>
+                <a href="{{ app_url }}/categories" class="text-[var(--brand-text)] link-hover">Categories</a>
+                <a href="{{ app_url }}/about" class="text-[var(--brand-text)] link-hover">About</a>
+                <a href="{{ app_url }}/contact" class="text-[var(--brand-text)] link-hover">Contact</a>
+            </div>
+            <div class="flex items-center gap-2">
+                <input type="search" id="searchInput" placeholder="Search cases" class="hidden md:block px-3 py-2 rounded-lg border border-[var(--card-border)] focus:border-[var(--brand-primary)] focus:ring-2 focus:ring-[var(--brand-primary)] outline-none" />
+                <a href="{{ app_url }}/cart" aria-label="Cart" class="hidden md:inline-flex items-center gap-2 px-3 py-2 rounded-lg bg-[var(--brand-navbar)] hover:bg-black text-white text-sm">
+                    <svg class="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M6 6h14l-2 8H8L6 6z" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><circle cx="9" cy="20" r="1"/><circle cx="17" cy="20" r="1"/></svg>
+                    <span>Cart</span>
+                    <span id="cartCount" class="ml-1 bg-red-500 text-white text-xs rounded-full px-2 py-0.5 hidden"></span>
+                </a>
+                <div class="relative userDropdown">
+                    {% if session.user_id %}
+                        <button class="hidden md:inline-flex items-center gap-2 px-3 py-2 rounded-lg bg-[var(--brand-navbar)] hover:bg-black text-white text-sm userDropdownToggle">
+                            <svg class="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor"><circle cx="12" cy="8" r="3" stroke-width="2"/><path d="M6 20c0-3.314 2.686-6 6-6s6 2.686 6 6" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                            <span>{{ session.user_name }}</span>
+                            <svg class="w-4 h-4 ml-1" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
+                        </button>
+                        <div class="userDropdownMenu absolute right-0 mt-2 w-48 bg-white rounded-md shadow-lg py-1 hidden">
+                            <a href="{{ app_url }}/account" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">My Profile</a>
+                            <a href="{{ app_url }}/orders" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Orders</a>
+                            <a href="{{ app_url }}/wishlist" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Wishlist</a>
+                            <a href="{{ app_url }}/logout" class="block px-4 py-2 text-sm text-red-600 hover:bg-gray-100">Logout</a>
+                        </div>
+                    {% else %}
+                        <button class="hidden md:inline-flex items-center gap-2 px-3 py-2 rounded-lg bg-[var(--brand-navbar)] hover:bg-black text-white text-sm userDropdownToggle">
+                            <svg class="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor"><circle cx="12" cy="8" r="3" stroke-width="2"/><path d="M6 20c0-3.314 2.686-6 6-6s6 2.686 6 6" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                            <span>Login</span>
+                            <svg class="w-4 h-4 ml-1" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
+                        </button>
+                        <div class="userDropdownMenu absolute right-0 mt-2 w-48 bg-white rounded-md shadow-lg py-1 hidden">
+                            <a href="{{ app_url }}/login" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Login</a>
+                            <a href="{{ app_url }}/register" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Register</a>
+                        </div>
+                    {% endif %}
+                </div>
+                
+         <!-- Cart Icon with Badge -->
+<a href="{{ app_url }}/cart" class="relative">
+    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z"></path>
+    </svg>
+    {% if session.user_id %}
+    <span id="cart-count" class="absolute -top-2 -right-2 bg-red-600 text-white text-xs font-bold rounded-full w-5 h-5 flex items-center justify-center">0</span>
+    {% endif %}
+</a>
+
+{% if session.user_id %}
+<script>
+// Update cart count on page load
+fetch('{{ app_url }}/cart/count')
+    .then(res => res.json())
+    .then(data => {
+        const badge = document.getElementById('cart-count');
+        if (badge && data.count > 0) {
+            badge.textContent = data.count;
+            badge.style.display = 'flex';
+        } else if (badge) {
+            badge.style.display = 'none';
+        }
+    });
+</script>
+{% endif %}
+                {% if session.user_id %}
+                    <a href="{{ app_url }}/account" aria-label="Account" class="md:hidden p-2 rounded-lg bg-[var(--brand-navbar)] text-white hover:bg-black">
+                        <svg class="w-6 h-6" viewBox="0 0 24 24" fill="none" stroke="currentColor"><circle cx="12" cy="8" r="3" stroke-width="2"/><path d="M6 20c0-3.314 2.686-6 6-6s6 2.686 6 6" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                    </a>
+                {% else %}
+                    <a href="{{ app_url }}/login" aria-label="Account" class="md:hidden p-2 rounded-lg bg-[var(--brand-navbar)] text-white hover:bg-black">
+                        <svg class="w-6 h-6" viewBox="0 0 24 24" fill="none" stroke="currentColor"><circle cx="12" cy="8" r="3" stroke-width="2"/><path d="M6 20c0-3.314 2.686-6 6-6s6 2.686 6 6" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                    </a>
+                {% endif %}
+            </div>
+        </div>
+        <div id="mobileMenu" class="md:hidden hidden border-t border-gray-200 bg-white">
+            <div class="px-4 py-3 space-y-3">
+                <input type="search" placeholder="Search cases" class="w-full px-3 py-2 rounded-lg border border-[var(--card-border)] focus:border-[var(--brand-primary)] focus:ring-2 focus:ring-[var(--brand-primary)] outline-none" />
+                <a href="{{ app_url }}/" class="block text-[var(--brand-text)]">Home</a>
+                <a href="{{ app_url }}/products" class="block text-[var(--brand-text)]">Shop</a>
+                <a href="{{ app_url }}/categories" class="block text-[var(--brand-text)]">Categories</a>
+                <a href="{{ app_url }}/about" class="block text-[var(--brand-text)]">About</a>
+                <a href="{{ app_url }}/contact" class="block text-[var(--brand-text)]">Contact</a>
+                {% if not session.user_id %}
+                    <a href="{{ app_url }}/login" class="block text-[var(--brand-text)]">Login</a>
+                {% endif %}
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    {% block content %}{% endblock %}
+
+    <!-- Footer -->
+    <footer class="bg-black text-white py-12">
+        <div class="container mx-auto px-4">
+            <div class="grid grid-cols-1 md:grid-cols-4 gap-8 mb-8">
+                <div>
+                    <h4 class="text-lg font-semibold mb-4">USEFUL LINKS</h4>
+                    <div class="w-12 h-1 bg-green-500 mb-4"></div>
+                    <ul class="space-y-2 text-gray-400">
+                        <li><a href="{{ app_url }}/reviews" class="hover:text-white">Love from the Customers</a></li>
+                        <li><a href="{{ app_url }}/about" class="hover:text-white">About Us</a></li>
+                        <li><a href="{{ app_url }}/refund-policy" class="hover:text-white">Refund Policy</a></li>
+                        <li><a href="{{ app_url }}/privacy-policy" class="hover:text-white">Privacy Policy</a></li>
+                        <li><a href="{{ app_url }}/shipping-policy" class="hover:text-white">Shipping policy</a></li>
+                        <li><a href="{{ app_url }}/terms" class="hover:text-white">Term and Conditions</a></li>
+                    </ul>
+                </div>
+                <div>
+                    <h4 class="text-lg font-semibold mb-4">ACCOUNT</h4>
+                    <div class="w-12 h-1 bg-green-500 mb-4"></div>
+                    <ul class="space-y-2 text-gray-400">
+                        <li><a href="{{ app_url }}/orders" class="hover:text-white">My Orders</a></li>
+                        <li><a href="{{ app_url }}/account" class="hover:text-white">My Account</a></li>
+                        <li><a href="{{ app_url }}/track-order" class="hover:text-white">Track order</a></li>
+                        <li><a href="{{ app_url }}/checkout" class="hover:text-white">Checkout</a></li>
+                        <li><a href="{{ app_url }}/contact" class="hover:text-white">Contact us</a></li>
+                    </ul>
+                </div>
+                <div>
+                    <h4 class="text-lg font-semibold mb-4">HELP CENTER</h4>
+                    <div class="w-12 h-1 bg-green-500 mb-4"></div>
+                    <p class="text-gray-400 mb-2">Support time : 09.30 AM to 06.00 PM (Monday to saturday)</p>
+                    <p class="text-gray-400 mb-4">Contact@backroar.in</p>
+                    <h5 class="font-semibold mb-2">Connect with us</h5>
+                    <div class="flex space-x-4">
+                        <a href="#" class="text-gray-400 hover:text-white"><svg fill="currentColor" viewBox="0 0 24 24" class="h-6 w-6" aria-hidden="true"><path fill-rule="evenodd" d="M22 12c0-5.523-4.477-10-10-10S2 6.477 2 12c0 4.991 3.657 9.128 8.438 9.878v-6.987h-2.54V12h2.54V9.797c0-2.506 1.492-3.89 3.776-3.89 1.094 0 2.238.195 2.238.195v2.46h-1.26c-1.243 0-1.63.771-1.63 1.562V12h2.773l-.443 2.89h-2.33V22C17.363 21.128 22 16.991 22 12z" clip-rule="evenodd" /></svg></a>
+                        <a href="#" class="text-gray-400 hover:text-white"><svg fill="currentColor" viewBox="0 0 24 24" class="h-6 w-6" aria-hidden="true"><path fill-rule="evenodd" d="M12.315 2c2.43 0 2.784.013 3.715.056 8.825.38 9.467 7.594 9.513 7.687.05.173.05.376.05.592 0 2.43-.013 2.784-.056 3.715-.38 8.825-7.594 9.467-7.687 9.513-.173.05-.376.05-.592.05-2.43 0-2.784-.013-3.715-.056-8.825-.38-9.467-7.594-9.513-7.687-.05-.173-.05-.376-.05-.592 0-2.43.013-2.784.056-3.715.38-8.825 7.594-9.467 7.687-9.513.173-.05.376-.05.592-.05zM12 1.802c-2.686 0-3.038.014-4.122.067-7.21.325-7.698 8.048-7.75 8.179-.04.1-.04.247-.04.423 0 2.686.014 3.038.067 4.122.325 7.21 8.048 7.698 8.179 7.75.1.04.247.04.423.04 2.686 0 3.038-.014 4.122-.067 7.21-.325 7.698-8.048 7.75-8.179.04-.1.04-.247.04-.423 0-2.686-.014-3.038-.067-4.122-.325-7.21-8.048-7.698-8.179-7.75-.1-.04-.247-.04-.423-.04zm0 1.883c2.15 0 2.414.009 3.26.051 6.5.31 6.839 7.167 6.886 7.283.035.088.035.216.035.386 0 2.15-.009 2.414-.051 3.26-.31 6.5-7.167 6.839-7.283 6.886-.088.035-.216.035-.386.035-2.15 0-2.414-.009-3.26-.051-6.5-.31-6.839-7.167-6.886-7.283-.035-.088-.035-.216-.035-.386 0-2.15.009-2.414.051-3.26.31-6.5 7.167-6.839 7.283-6.886.088-.035.216-.035.386-.035zm0 3.627c-2.275 0-4.111 1.835-4.111 4.11s1.836 4.11 4.111 4.11 4.111-1.835 4.111-4.11-1.836-4.11-4.111-4.11zm0 6.775c-1.472 0-2.665-1.193-2.665-2.665S10.528 9.802 12 9.802s2.665 1.193 2.665 2.665-1.193 2.665-2.665 2.665z" clip-rule="evenodd" /></svg></a>
+                    </div>
+                </div>
+                <div>
+                    <h4 class="text-lg font-semibold mb-4">REGISTERED OFFICE ADDRESS:</h4>
+                    <div class="w-12 h-1 bg-green-500 mb-4"></div>
+                    <p class="text-gray-400">Backroar</p>
+                    <p class="text-gray-400">503 Rhythm Plaza</p>
+                    <p class="text-gray-400">Nikol Ringroad</p>
+                    <p class="text-gray-400">Ahmedabad Gujarat - 382350</p>
+                </div>
+            </div>
+            <div class="border-t border-gray-700 pt-8 flex flex-col md:flex-row items-center justify-between text-sm text-gray-400">
+                <p>Copyright 2025 © Backroar.in</p>
+                <div class="flex gap-2 mt-4 md:mt-0">
+                    <img src="{{ app_url }}/images/payments.png" alt="Payment Methods" class="h-6">
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // Mobile Menu Toggle
+        const menuToggle = document.getElementById('menuToggle');
+        const mobileMenu = document.getElementById('mobileMenu');
+        if (menuToggle && mobileMenu) {
+            menuToggle.addEventListener('click', () => {
+                mobileMenu.classList.toggle('hidden');
+            });
+            mobileMenu.querySelectorAll('a').forEach(a => {
+                a.addEventListener('click', () => mobileMenu.classList.add('hidden'));
+            });
+        }
+
+        // User Dropdown Menu Toggle
+        document.querySelectorAll('.userDropdownToggle').forEach(button => {
+            const dropdown = button.closest('.userDropdown');
+            const menu = dropdown.querySelector('.userDropdownMenu');
+
+            button.addEventListener('click', (e) => {
+                e.stopPropagation();
+                menu.classList.toggle('hidden');
+            });
+
+            menu.querySelectorAll('a').forEach(link => {
+                link.addEventListener('click', () => {
+                    menu.classList.add('hidden');
+                });
+            });
+        });
+
+        // Close dropdown when clicking outside
+        document.addEventListener('click', () => {
+            document.querySelectorAll('.userDropdownMenu').forEach(menu => {
+                menu.classList.add('hidden');
+            });
+        });
+
+        // Cart Functions
+        function getCart(){ try { return JSON.parse(localStorage.getItem('cart')||'[]'); } catch(e){ return []; } }
+        function saveCart(c){ localStorage.setItem('cart', JSON.stringify(c)); updateCartCount(); }
+        function updateCartCount() {
+            const cart = getCart();
+            const count = cart.reduce((sum, item) => sum + (item.qty || 1), 0);
+            const badge = document.getElementById('cartCount');
+            if (badge) {
+                if (count > 0) {
+                    badge.textContent = count;
+                    badge.classList.remove('hidden');
+                } else {
+                    badge.classList.add('hidden');
+                }
+            }
+        }
+        updateCartCount();
+    </script>
+    {% block scripts %}{% endblock %}
+</body>
+</html> 

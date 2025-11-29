@@ -1,0 +1,453 @@
+{% extends 'base.twig' %}
+
+{% block title %}{{ title }}{% endblock %}
+
+{% block content %}
+<style>
+    @keyframes fadeInUp {
+        from {
+            opacity: 0;
+            transform: translateY(20px);
+        }
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+
+    @keyframes fadeIn {
+        from { opacity: 0; }
+        to { opacity: 1; }
+    }
+
+    @keyframes slideDown {
+        from {
+            opacity: 0;
+            transform: translateY(-10px);
+        }
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+
+    @keyframes shimmer {
+        0% { background-position: -1000px 0; }
+        100% { background-position: 1000px 0; }
+    }
+
+    .animate-fade-in-up {
+        animation: fadeInUp 0.6s ease-out forwards;
+    }
+
+    .animate-fade-in {
+        animation: fadeIn 0.4s ease-out;
+    }
+
+    .animate-slide-down {
+        animation: slideDown 0.3s ease-out;
+    }
+
+    .stagger-1 { animation-delay: 0.1s; opacity: 0; }
+    .stagger-2 { animation-delay: 0.2s; opacity: 0; }
+    .stagger-3 { animation-delay: 0.3s; opacity: 0; }
+    .stagger-4 { animation-delay: 0.4s; opacity: 0; }
+
+    .product-card {
+        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        opacity: 0;
+        animation: fadeInUp 0.5s ease-out forwards;
+    }
+
+    .product-card:hover {
+        transform: translateY(-8px);
+        box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+    }
+
+    .product-card:nth-child(1) { animation-delay: 0.05s; }
+    .product-card:nth-child(2) { animation-delay: 0.1s; }
+    .product-card:nth-child(3) { animation-delay: 0.15s; }
+    .product-card:nth-child(4) { animation-delay: 0.2s; }
+    .product-card:nth-child(5) { animation-delay: 0.25s; }
+    .product-card:nth-child(6) { animation-delay: 0.3s; }
+    .product-card:nth-child(7) { animation-delay: 0.35s; }
+    .product-card:nth-child(8) { animation-delay: 0.4s; }
+
+    .product-image-wrapper {
+        position: relative;
+        overflow: hidden;
+    }
+
+    .product-image-wrapper::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: -100%;
+        width: 100%;
+        height: 100%;
+        background: linear-gradient(90deg, transparent, rgba(255,255,255,0.3), transparent);
+        transition: left 0.5s;
+        z-index: 1;
+    }
+
+    .product-card:hover .product-image-wrapper::before {
+        left: 100%;
+    }
+
+    .product-card img {
+        transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    .product-card:hover img {
+        transform: scale(1.1);
+    }
+
+    .filter-card {
+        transition: all 0.3s ease;
+    }
+
+    .filter-card:hover {
+        box-shadow: 0 10px 20px rgba(0, 0, 0, 0.08);
+    }
+
+    select, input {
+        transition: all 0.2s ease;
+    }
+
+    select:focus, input:focus {
+        outline: none;
+        border-color: var(--brand-primary);
+        box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+        transform: translateY(-1px);
+    }
+
+    .btn-primary {
+        position: relative;
+        overflow: hidden;
+        transition: all 0.3s ease;
+    }
+
+    .btn-primary::before {
+        content: '';
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        width: 0;
+        height: 0;
+        border-radius: 50%;
+        background: rgba(255, 255, 255, 0.2);
+        transform: translate(-50%, -50%);
+        transition: width 0.6s, height 0.6s;
+    }
+    /* PRODUCT GRID IMAGE FIX */
+.product-grid-img {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;       /* Never crop image */
+    object-position: center;   /* Always centered */
+    background: #f8fafc;       /* Clean background */
+    transition: transform 0.4s ease;
+}
+
+/* Smooth Zoom Effect Only on Hover */
+.product-card:hover .product-grid-img {
+    transform: scale(1.08); /* small zoom (no overflow issues) */
+}
+
+
+    .btn-primary:hover::before {
+        width: 300px;
+        height: 300px;
+    }
+
+    .btn-primary:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 10px 20px rgba(0, 0, 0, 0.15);
+    }
+
+    .btn-primary:active {
+        transform: translateY(0);
+    }
+
+    .badge {
+        animation: fadeIn 0.3s ease-out;
+    }
+
+    .breadcrumb-link {
+        position: relative;
+        transition: color 0.2s ease;
+    }
+
+    .breadcrumb-link::after {
+        content: '';
+        position: absolute;
+        bottom: -2px;
+        left: 0;
+        width: 0;
+        height: 2px;
+        background: var(--brand-primary);
+        transition: width 0.3s ease;
+    }
+
+    .breadcrumb-link:hover::after {
+        width: 100%;
+    }
+
+    .sale-badge {
+        position: absolute;
+        top: 8px;
+        right: 8px;
+        background: linear-gradient(135deg, #ef4444, #dc2626);
+        color: white;
+        padding: 4px 12px;
+        border-radius: 20px;
+        font-size: 0.75rem;
+        font-weight: 600;
+        z-index: 2;
+        box-shadow: 0 2px 8px rgba(239, 68, 68, 0.4);
+        animation: fadeIn 0.5s ease-out;
+    }
+
+    .empty-state {
+        animation: fadeInUp 0.6s ease-out;
+    }
+
+    .mobile-filter-btn {
+        transition: all 0.3s ease;
+    }
+
+    .mobile-filter-btn:active {
+        transform: scale(0.95);
+    }
+
+    @media (max-width: 1024px) {
+        .product-card:hover {
+            transform: translateY(-4px);
+        }
+    }
+</style>
+
+<section class="py-10">
+    <div class="container mx-auto px-4">
+
+        <!-- Breadcrumb -->
+        <div class="mb-4 text-gray-600 text-sm animate-fade-in">
+            <a href="{{ app_url }}/" class="breadcrumb-link hover:text-[var(--brand-primary)]">Home</a>
+            <span class="mx-2">/</span>
+            <a href="{{ app_url }}/categories" class="breadcrumb-link hover:text-[var(--brand-primary)]">Categories</a>
+            <span class="mx-2">/</span>
+            <strong class="text-[var(--brand-text)]">{{ category.name }}</strong>
+        </div>
+
+        <h1 class="text-3xl md:text-4xl font-bold mb-8 text-[var(--brand-heading)] animate-fade-in-up">
+            {{ category.name }}
+        </h1>
+
+        <div class="grid grid-cols-1 lg:grid-cols-4 gap-8">
+
+            <!-- Sidebar -->
+            <aside class="lg:col-span-1 animate-fade-in-up stagger-1">
+
+                <!-- Mobile Filter Button -->
+                <div class="lg:hidden mb-4">
+                    <button 
+                        onclick="document.getElementById('mobileFilters').classList.toggle('hidden')"
+                        class="mobile-filter-btn w-full px-4 py-3 bg-[var(--brand-primary)] text-white font-semibold rounded-lg shadow-md hover:shadow-lg">
+                        <span class="flex items-center justify-center gap-2">
+                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 4a1 1 0 011-1h16a1 1 0 011 1v2.586a1 1 0 01-.293.707l-6.414 6.414a1 1 0 00-.293.707V17l-4 4v-6.586a1 1 0 00-.293-.707L3.293 7.293A1 1 0 013 6.586V4z"/>
+                            </svg>
+                            Filters
+                        </span>
+                    </button>
+                </div>
+
+                <!-- Filter Box -->
+                <div id="mobileFilters" class="hidden lg:block animate-slide-down">
+                    <div class="filter-card bg-white p-6 rounded-xl shadow-lg sticky top-20">
+
+                        <h3 class="text-lg font-semibold mb-6 text-[var(--brand-text)] flex items-center gap-2">
+                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6V4m0 2a2 2 0 100 4m0-4a2 2 0 110 4m-6 8a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4m6 6v10m6-2a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4"/>
+                            </svg>
+                            Filters
+                        </h3>
+
+                        <form method="GET" id="filterForm" class="space-y-6">
+
+                            {% if subcategories|length > 0 %}
+                            <div>
+                                <label class="block text-sm font-semibold mb-3 text-[var(--brand-text)]">Type</label>
+                                <select name="subcategory" 
+                                    class="w-full px-3 py-2 border border-[var(--card-border)] rounded-lg bg-white"
+                                    onchange="this.form.submit()">
+                                    <option value="">All Types</option>
+                                    {% for sub in subcategories %}
+                                        <option value="{{ sub.id }}" 
+                                            {% if filters.subcategory_id == sub.id %}selected{% endif %}>
+                                            {{ sub.name }} ({{ sub.product_count }})
+                                        </option>
+                                    {% endfor %}
+                                </select>
+                            </div>
+                            {% endif %}
+
+                            {% if brands|length > 0 %}
+                            <div>
+                                <label class="block text-sm font-semibold mb-3 text-[var(--brand-text)]">Brand</label>
+                                <select name="brand" 
+                                    class="w-full px-3 py-2 border border-[var(--card-border)] rounded-lg bg-white"
+                                    onchange="this.form.submit()">
+                                    <option value="">All Brands</option>
+                                    {% for brand in brands %}
+                                        <option value="{{ brand.id }}" 
+                                            {% if filters.brand_id == brand.id %}selected{% endif %}>
+                                            {{ brand.name }} ({{ brand.product_count }})
+                                        </option>
+                                    {% endfor %}
+                                </select>
+                            </div>
+                            {% endif %}
+
+                            {% if models|length > 0 %}
+                            <div>
+                                <label class="block text-sm font-semibold mb-3 text-[var(--brand-text)]">Model</label>
+                                <select name="model" 
+                                    class="w-full px-3 py-2 border border-[var(--card-border)] rounded-lg bg-white"
+                                    onchange="this.form.submit()">
+                                    <option value="">All Models</option>
+                                    {% for model in models %}
+                                        <option value="{{ model.id }}" 
+                                            {% if filters.model_id == model.id %}selected{% endif %}>
+                                            {{ model.name }}
+                                        </option>
+                                    {% endfor %}
+                                </select>
+                            </div>
+                            {% endif %}
+
+                            <!-- Price Range -->
+                            <div class="border-t border-[var(--card-border)] pt-6">
+                                <label class="block text-sm font-semibold mb-3 text-[var(--brand-text)]">Price Range</label>
+
+                                <div class="grid grid-cols-2 gap-3 mb-3">
+                                    <input type="number" name="min_price"
+                                           placeholder="Min"
+                                           value="{{ filters.min_price }}"
+                                           class="w-full px-3 py-2 border border-[var(--card-border)] rounded-lg">
+
+                                    <input type="number" name="max_price"
+                                           placeholder="Max"
+                                           value="{{ filters.max_price }}"
+                                           class="w-full px-3 py-2 border border-[var(--card-border)] rounded-lg">
+                                </div>
+
+                                <button type="submit"
+                                        class="btn-primary w-full px-4 py-2 bg-[var(--brand-primary)] text-white rounded-lg font-semibold">
+                                    Apply Filter
+                                </button>
+                            </div>
+
+                            <!-- Clear -->
+                            <a href="{{ app_url }}/category/{{ category.slug }}" 
+                               class="block w-full px-4 py-2 border-2 border-gray-300 rounded-lg text-center font-semibold text-gray-700 hover:border-[var(--brand-primary)] hover:text-[var(--brand-primary)] transition-all duration-300">
+                               Clear All
+                            </a>
+
+                        </form>
+                    </div>
+                </div>
+            </aside>
+
+            <!-- Product Grid -->
+            <main class="lg:col-span-3 animate-fade-in-up stagger-2">
+
+                <!-- Sort -->
+                <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 mb-6 bg-white p-4 rounded-lg shadow-sm">
+                    <p class="text-gray-600 text-sm">
+                        Showing <strong class="text-[var(--brand-primary)]">{{ products|length }}</strong> of <strong>{{ pagination.total }}</strong> products
+                    </p>
+
+                    <form method="GET" class="w-full md:w-auto">
+                        {% for key, value in filters %}
+                            {% if key != 'sort' and value %}
+                                <input type="hidden" name="{{ key }}" value="{{ value }}">
+                            {% endif %}
+                        {% endfor %}
+
+                        <select name="sort" 
+                            class="w-full md:w-56 px-3 py-2 border border-[var(--card-border)] rounded-lg bg-white"
+                            onchange="this.form.submit()">
+                            <option value="p.created_at DESC" {% if filters.sort == 'p.created_at DESC' %}selected{% endif %}>Newest First</option>
+                            <option value="p.price ASC" {% if filters.sort == 'p.price ASC' %}selected{% endif %}>Price: Low to High</option>
+                            <option value="p.price DESC" {% if filters.sort == 'p.price DESC' %}selected{% endif %}>Price: High to Low</option>
+                            <option value="p.name ASC" {% if filters.sort == 'p.name ASC' %}selected{% endif %}>Name: A to Z</option>
+                        </select>
+                    </form>
+                </div>
+
+                {% if products|length > 0 %}
+
+                <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-6 mb-8">
+                    {% for product in products %}
+                    <a href="{{ app_url }}/product/{{ product.slug }}" 
+                       class="product-card overflow-hidden bg-white border border-[var(--card-border)] rounded-xl shadow-md">
+
+                        <div class="product-image-wrapper aspect-square bg-[var(--card-bg-alt)] flex items-center justify-center overflow-hidden relative">
+                            {% if product.sale_price %}
+                                <div class="sale-badge">
+                                    SALE
+                                </div>
+                            {% endif %}
+                            
+                            {% if product.image_path %}
+                                <img src="{{ product.image_path }}"
+     alt="{{ product.name }}"
+     class="product-grid-img">
+
+                            {% else %}
+                                <div class="text-5xl">📦</div>
+                            {% endif %}
+                        </div>
+
+                        <div class="p-4">
+                            {% if product.brand_name %}
+                            <p class="text-xs text-gray-500 uppercase mb-2 font-semibold tracking-wide">{{ product.brand_name }}</p>
+                            {% endif %}
+
+                            <h3 class="text-sm font-semibold mb-3 line-clamp-2 text-[var(--brand-text)] min-h-[2.5rem]">
+                                {{ product.name }}
+                            </h3>
+
+                            <div class="flex items-center gap-2">
+                                {% if product.sale_price %}
+                                    <span class="text-lg font-bold text-red-600">₹{{ product.sale_price }}</span>
+                                    <span class="text-sm text-gray-500 line-through">₹{{ product.price }}</span>
+                                {% else %}
+                                    <span class="text-lg font-bold text-[var(--brand-text)]">₹{{ product.price }}</span>
+                                {% endif %}
+                            </div>
+                        </div>
+                    </a>
+                    {% endfor %}
+                </div>
+
+                {% else %}
+                <div class="empty-state bg-white p-12 rounded-xl shadow-lg text-center">
+                    <div class="text-6xl mb-4">🔍</div>
+                    <h3 class="text-2xl font-semibold mb-2 text-[var(--brand-heading)]">No Products Found</h3>
+                    <p class="text-gray-600 mb-6">Try adjusting your filters to see more results</p>
+                    <a href="{{ app_url }}/category/{{ category.slug }}" 
+                       class="inline-block px-6 py-3 bg-[var(--brand-primary)] text-white rounded-lg font-semibold hover:shadow-lg transition-all">
+                        Clear Filters
+                    </a>
+                </div>
+                {% endif %}
+
+            </main>
+
+        </div>
+
+    </div>
+</section>
+{% endblock %}

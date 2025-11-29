@@ -1,0 +1,221 @@
+Build a COMPLETE, production-grade E-commerce + POS + Warehouse + Wholesale Management System using:
+
+● PHP 8  
+● Twig template engine  
+● MySQL  
+● MVC architecture  
+● PDO  
+● .htaccess URL routing  
+● WebP image system  
+● Barcode scanning support  
+● Multi-store (4 shops + 1 warehouse)  
+● Wholesale billing + Retail billing  
+● Single combined database
+
+===========================================================
+         BUSINESS REQUIREMENTS (VERY IMPORTANT)
+===========================================================
+
+The business system must support:
+
+1. Main Warehouse – receives all stock
+2. 4 Shops (Shop1, Shop2, Shop3, Shop4)
+3. Retail Website (normal customers)
+4. Wholesale customers (local, retailer, distributor)
+5. Barcode-based POS billing
+6. Warehouse → Shop stock transfer
+7. Website stock must reflect TOTAL STOCK (warehouse + shops)
+
+===========================================================
+                   PRODUCT CATEGORIES
+===========================================================
+
+MAIN CATEGORIES:
+1. Mobile Phones
+2. Mobile Backcases
+3. Gadgets
+4. Tempered Glass
+
+Backcase Types (13 types):
+Flip, Silicon, Transparent, Ring, Diamond, Metal, Photo Print, Anime, Car Logo, Hard, Fiber, Toy Silicon, Premium
+
+Gadget Types:
+Cables, Chargers, Headphones, Speakers, Airpods, Neckbands, Power Banks, Mobile Stands, Others
+
+Tempered Glass Types:
+Clear Temper, Matte Temper, UV, Full Glue, Privacy, Borderless, Clear Sheet, Matte Sheet, Bullet Proof, Mirror
+
+BRANDS:
+iPhone, Samsung, Vivo, Oppo, Redmi, OnePlus, Moto, Realme, Lava, Infinix  
+Each brand has many models.
+
+===========================================================
+         STOCK SYSTEM (MUST BE BUILT EXACTLY LIKE THIS)
+===========================================================
+
+● Stock arrives at Warehouse → scanned → registered  
+● Warehouse transfers stock to 4 shops  
+● Shops sell via POS using barcode scanning  
+● Website shows total_stock = warehouse_stock + sum(shop_stock)  
+● When shop sells items, shop_stock decreases AND warehouse_stock decreases (central sync)  
+● All sales (website, shop, wholesale) reduce central stock  
+
+===========================================================
+          WHOLESALE SYSTEM (VERY IMPORTANT)
+===========================================================
+
+Wholesale customers have:
+- business_name
+- gst_number
+- wholesaler_type: local, retailer, distributor
+
+Wholesale price rules:
+- Each product has retail_price + wholesale_price
+- Additional table wholesale_prices to store price per wholesaler_type
+- Wholesale orders support GST billing
+
+===========================================================
+            DATABASE REQUIREMENTS (FULL SCHEMA)
+===========================================================
+
+Generate complete MySQL schema including:
+
+● users (with wholesaler fields)
+● stores (warehouse + 4 shops)
+● categories / subcategories
+● brands / models
+● products (retail & wholesale pricing)
+● product_images (batch folders: images/000/, images/001/, …)
+● store_stock (warehouse & shop stock)
+● stock_transfers
+● stock_logs
+● pos_orders, pos_order_items
+● wholesale_orders, wholesale_order_items
+● cart, orders, order_items (website)
+● payment_logs
+● barcode table (barcode → product_id)
+
+Add:
+- ALL indexes
+- foreign keys
+- fulltext search on product name/description
+- optimized for 1 lakh+ products
+
+===========================================================
+        PHP MVC PROJECT STRUCTURE (REQUIRED)
+===========================================================
+
+Generate FULL folder structure:
+
+app/
+  config/
+  core/
+  controllers/
+  models/
+  routes/
+  services/
+  helpers/
+  views/ (Twig)
+public/
+storage/
+  images/
+vendor/
+
+===========================================================
+         REQUIRED PHP FEATURES (FULL IMPLEMENTATION)
+===========================================================
+
+Generate FULL, REAL code for:
+
+1. Router (clean URLs via .htaccess)
+2. BaseController, Model, View classes
+3. PDO database connection
+4. Authentication (login/register/logout)
+5. Category + Subcategory pages
+6. Brand → Model mapping pages
+7. Product listings (mobile cases, phones, gadgets, temper)
+8. Product filters:
+   - brand
+   - model
+   - case type
+   - price range
+   - search
+9. Cart system
+10. Checkout (COD and Online)
+11. Order history
+12. POS billing module:
+    - barcode input
+    - live product fetch
+    - add items
+    - print bill
+13. Wholesale billing module:
+    - choose wholesaler type
+    - get correct wholesale price
+    - generate GST bill
+14. Warehouse module:
+    - stock receiving
+    - barcode registration
+    - stock adjustments
+15. Stock Transfer module:
+    - warehouse → shop
+    - logs
+16. Admin panel:
+    - upload products
+    - upload images
+    - manage brands/models
+    - manage categories/subcategories
+    - manage wholesalers
+    - stock reports
+
+===========================================================
+         IMAGE STORAGE SYSTEM (STRICT REQUIREMENTS)
+===========================================================
+
+● Store images in batches of 1000  
+  Example:
+  images/000/
+  images/001/
+  images/002/
+
+folder = floor(product_id / 1000), padded to 3 digits.
+
+● Always convert to WebP using GD/Imagick  
+● Max width = 1200px  
+● Max file size = 70–200 KB  
+● Sanitize filename  
+● Only store “images/{folder}/{product_id}.webp” in database  
+● Provide:
+   - upload_image.php
+   - auto directory creation
+   - compression code
+   - MySQL update code
+   - sample Twig upload form
+
+===========================================================
+          OUTPUT FORMAT (VERY IMPORTANT)
+===========================================================
+
+You MUST output:
+
+1. Full MySQL schema (CREATE TABLE statements)
+2. Full PHP MVC project code (all controllers/models/views/services)
+3. Full Twig templates:
+   - base.twig
+   - home.twig
+   - category.twig
+   - product.twig
+   - cart.twig
+   - checkout.twig
+   - order_confirm.twig
+   - pos_billing.twig
+   - wholesale_billing.twig
+   - stock_receive.twig
+4. Full image upload system
+5. Full barcode scan route + logic
+6. Stock sync logic
+7. Warehouse → shop transfer code
+8. Real working examples
+
+===========================================================
+ Generate the COMPLETE working PHP + Twig + MySQL system.
+===========================================================
