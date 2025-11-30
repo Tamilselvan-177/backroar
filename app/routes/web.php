@@ -94,7 +94,7 @@ $router->post('/order/cancel', OrderController::class, 'cancel');
 $router->post('/wishlist/add', WishlistController::class, 'add');
 $router->post('/wishlist/remove', WishlistController::class, 'remove');
 $router->get('/wishlist', WishlistController::class, 'index');
-
+$router->post('/wishlist/remove-form', WishlistController::class, 'removeForm');
 $router->post('/reviews', \App\Controllers\ReviewController::class, 'store');
 
 

@@ -29,16 +29,20 @@
 
             <!-- Main Content -->
             <div class="md:col-span-3">
-                <div class="grid sm:grid-cols-2 gap-6 mb-6">
-                    <div class="bg-white rounded-lg shadow border border-[var(--card-border)] p-6">
-                        <h4 class="font-semibold mb-2">Total Orders</h4>
-                        <p class="text-3xl font-bold text-[var(--brand-primary)]">0</p>
-                    </div>
-                    <div class="bg-white rounded-lg shadow border border-[var(--card-border)] p-6">
-                        <h4 class="font-semibold mb-2">Wishlist Items</h4>
-                        <p class="text-3xl font-bold text-[var(--brand-primary)]">0</p>
-                    </div>
-                </div>
+               <div class="grid sm:grid-cols-2 gap-6 mb-6">
+    <div class="bg-white rounded-lg shadow border border-[var(--card-border)] p-6">
+        <h4 class="font-semibold mb-2">Total Orders</h4>
+        <p class="text-3xl font-bold text-[var(--brand-primary)]">
+            {{ total_orders }}
+        </p>
+    </div>
+    <div class="bg-white rounded-lg shadow border border-[var(--card-border)] p-6">
+        <h4 class="font-semibold mb-2">Wishlist Items</h4>
+        <p class="text-3xl font-bold text-[var(--brand-primary)]">
+            {{ wishlist_count }}
+        </p>
+    </div>
+</div>
 
                 <div class="bg-white rounded-lg shadow border border-[var(--card-border)] p-6">
                     <h3 class="text-xl font-semibold mb-4">Recent Orders</h3>
